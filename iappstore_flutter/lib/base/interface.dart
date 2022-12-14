@@ -21,6 +21,7 @@ class Box<T extends Object> {
   Box(this.value);
 }
 
-extension Extension<T extends Object> on T {
+// [Dart编码：`extension` 这样用更高效](https://www.jianshu.com/p/2779792d3212)
+extension ExtensionObject<T extends Object> on T {
   Box<T> get box => Box<T>(this);
 }
