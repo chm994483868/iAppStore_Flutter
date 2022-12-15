@@ -1,5 +1,5 @@
 import 'package:iappstore_flutter/generated/json/base/json_convert_content.dart';
-import 'package:iappstore_flutter/models/app_detail_m_entity.dart';
+import 'package:iappstore_flutter/entity/app_detail_m_entity.dart';
 
 AppDetailMEntity $AppDetailMEntityFromJson(Map<String, dynamic> json) {
 	final AppDetailMEntity appDetailMEntity = AppDetailMEntity();

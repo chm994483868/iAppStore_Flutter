@@ -30,6 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  dio: ^4.0.6
+  pretty_dio_logger: ^1.1.1
+  get: ^4.6.5
+  pull_to_refresh: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

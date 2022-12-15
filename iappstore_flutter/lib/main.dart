@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iappstore_flutter/http_util/http_status.dart';
 import 'package:iappstore_flutter/string_to_number.dart';
 import 'package:iappstore_flutter/base/interface.dart';
 
@@ -18,6 +19,7 @@ void main() {
   // ignore: avoid_print
   print('18'.toInt());
   TestMethod();
+  print(HttpStatus.mappingTable.runtimeType.toString());
 
   runApp(const MyApp());
 }

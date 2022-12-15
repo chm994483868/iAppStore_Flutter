@@ -1,5 +1,5 @@
 import 'package:iappstore_flutter/generated/json/base/json_convert_content.dart';
-import 'package:iappstore_flutter/models/app_rank_m_entity.dart';
+import 'package:iappstore_flutter/entity/app_rank_m_entity.dart';
 
 AppRankMEntity $AppRankMEntityFromJson(Map<String, dynamic> json) {
 	final AppRankMEntity appRankMEntity = AppRankMEntity();
