@@ -21,7 +21,7 @@ class AppRankMEntity {
 @JsonSerializable()
 class AppRankMFeed {
   AppRankMFeedAuthor? author;
-  AppRankMFeedEntry? entry;
+  List<AppRankMFeedEntry>? entry;
   AppRankMFeedUpdated? updated;
   AppRankMFeedRights? rights;
   AppRankMFeedTitle? title;

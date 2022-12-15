@@ -1,3 +1,4 @@
+/// HTTP 状态码枚举：状态码的数值然后对应一个枚举 name 的字符串，该字符串表示请求响应的简单描述
 enum HttpStatus {
   continue_(100),
   switchingProtocols(101),
@@ -69,27 +70,23 @@ enum HttpStatus {
   connectionError(null);
 
   final int? code;
-
   const HttpStatus(this.code);
 
   //bool get connectionError => code == null;
-
-  bool get isUnauthorized => code == 401;
-
-  bool get isForbidden => code == 403;
-
-  bool get isNotFound => code == 404;
-
-  bool get isServerError => between(500, 599);
 
   bool between(int begin, int end) {
     return code != null && code! >= begin && code! <= end;
   }
 
+  // 一组 get 函数分别表示：是否需要验证/是否被拒绝/是否 404/是否服务器错误/是否请求 OK/是否请求不 OK
+  bool get isUnauthorized => code == 401;
+  bool get isForbidden => code == 403;
+  bool get isNotFound => code == 404;
+  bool get isServerError => between(500, 599);
   bool get isOk => between(200, 299);
-
   bool get hasError => !isOk;
 
+  // 在 HttpStatus 枚举中添加一个静态变量 map：以 code 为 key，以 枚举值为 value
   static Map<int?, HttpStatus> get mappingTable {
     Map<int?, HttpStatus> map = {};
     HttpStatus.values.map((e) => map[e.code] = e);

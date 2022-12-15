@@ -22,7 +22,7 @@ AppRankMFeed $AppRankMFeedFromJson(Map<String, dynamic> json) {
 	if (author != null) {
 		appRankMFeed.author = author;
 	}
-	final AppRankMFeedEntry? entry = jsonConvert.convert<AppRankMFeedEntry>(json['entry']);
+	final List<AppRankMFeedEntry>? entry = jsonConvert.convertListNotNull<AppRankMFeedEntry>(json['entry']);
 	if (entry != null) {
 		appRankMFeed.entry = entry;
 	}
@@ -56,7 +56,7 @@ AppRankMFeed $AppRankMFeedFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> $AppRankMFeedToJson(AppRankMFeed entity) {
 	final Map<String, dynamic> data = <String, dynamic>{};
 	data['author'] = entity.author?.toJson();
-	data['entry'] = entity.entry?.toJson();
+	data['entry'] =  entity.entry?.map((v) => v.toJson()).toList();
 	data['updated'] = entity.updated?.toJson();
 	data['rights'] = entity.rights?.toJson();
 	data['title'] = entity.title?.toJson();

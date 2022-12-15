@@ -1,6 +1,7 @@
 import 'package:iappstore_flutter/entity/base_entity.dart';
 import 'package:iappstore_flutter/http_util/http_util.dart';
 
+/// 延展 HttpUtils 添加 get<T> 和 post<T> 函数
 extension Request on HttpUtils {
   /// Get 请求直接转模型
   static Future<BaseEntity<T>> get<T>({required String api, Map<String, dynamic> params = const {}}) async {

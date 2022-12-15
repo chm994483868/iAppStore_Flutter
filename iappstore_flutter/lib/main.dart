@@ -20,6 +20,8 @@ void main() {
   print('18'.toInt());
   TestMethod();
   print(HttpStatus.mappingTable.runtimeType.toString());
+  final obj = new Object();
+  print(obj.box);
 
   runApp(const MyApp());
 }

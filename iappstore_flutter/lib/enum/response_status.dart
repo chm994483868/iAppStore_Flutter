@@ -1,3 +1,4 @@
+/// 定义网络请求成功的枚举 SuccessStatus，有数据和无数据两种状态
 enum SuccessStatus {
   hasContent(2),
   empty(3);
@@ -9,6 +10,7 @@ enum SuccessStatus {
   String toString() => 'The $name value is $value';
 }
 
+/// 定义网络请求响应状态的枚举：正在加载/失败/成功并且有数据/成功但是没有数据
 enum ResponseStatus {
   loading(0),
   fail(1),
@@ -22,8 +24,8 @@ enum ResponseStatus {
   String toString() => 'The $name value is $value';
 }
 
-/// 这里可以参考原作者文章：[Dart：枚举支持成员属性，并不好用](https://juejin.cn/post/7175060243330646075)
-/// 这是 Dart 新特性的例子
+/// 这里可以参考原作者文章：
+/// [Dart：枚举支持成员属性，并不好用](https://juejin.cn/post/7175060243330646075)
 enum Water {
   frozen(0),
   lukewarm(40),

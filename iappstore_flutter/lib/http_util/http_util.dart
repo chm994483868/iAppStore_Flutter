@@ -74,6 +74,7 @@ abstract class HttpUtils {
   }
 }
 
+/// 延展 Dio，给它添加一个名为 addPrettyPrint 的 get，自定义 Dio log 输出
 extension AddPrettyPrint on Dio {
   Dio get addPrettyPrint {
     interceptors.add(PrettyDioLogger(
@@ -88,6 +89,7 @@ extension AddPrettyPrint on Dio {
   }
 }
 
+/// 定义 HTTP 请求方式的枚举
 enum HTTPMethod {
   get("GET"),
   post("POST"),
@@ -97,11 +99,12 @@ enum HTTPMethod {
   head("HEAD");
 
   final String string;
-
   const HTTPMethod(this.string);
 }
 
+/// 延展 Response 给它添加一个名为 status 的 get，根据响应的 code，从 HttpStatus.mappingTable map 中取一个对应的枚举值
 extension EnumStatus on Response {
   season.HttpStatus get status =>
-      season.HttpStatus.mappingTable[statusCode] ?? season.HttpStatus.connectionError;
+      season.HttpStatus.mappingTable[statusCode] ??
+      season.HttpStatus.connectionError;
 }

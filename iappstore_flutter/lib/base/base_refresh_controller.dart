@@ -8,17 +8,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 abstract class BaseRefreshController<R extends IRepository, T> extends GetxController {
   late R request;
-
   late RefreshController refreshController;
-
   late int page;
-
   late int initPage;
-
+ 
   ResponseStatus status = ResponseStatus.loading;
-
   BaseEntity<PageEntity<List<T>>>? response;
-
   List<T> dataSource = [];
 
   @override
@@ -40,6 +35,7 @@ abstract class BaseRefreshController<R extends IRepository, T> extends GetxContr
     Map<String, dynamic>? parameters,
   }) async {}
 
+  
   void refreshControllerStatusUpdate(ScrollViewActionType type) {
     switch (type) {
       case ScrollViewActionType.refresh:
