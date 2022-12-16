@@ -35,7 +35,6 @@ abstract class BaseRefreshController<R extends IRepository, T> extends GetxContr
     Map<String, dynamic>? parameters,
   }) async {}
 
-  
   void refreshControllerStatusUpdate(ScrollViewActionType type) {
     switch (type) {
       case ScrollViewActionType.refresh:
