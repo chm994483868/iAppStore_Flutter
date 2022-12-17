@@ -13,7 +13,7 @@ class EmptyView extends StatelessWidget {
         children: const [
           Text(
             "暂无数据",
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 15),
           )
         ],
       )),

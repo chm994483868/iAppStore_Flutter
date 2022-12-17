@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class ErrorView extends StatelessWidget {
+  /// 重试按钮的回调事件
   VoidCallback? retryAction;
 
   ErrorView({super.key, this.retryAction});

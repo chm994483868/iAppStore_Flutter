@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:iappstore_flutter/http_util/api.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:iappstore_flutter/http_util/http_status.dart' as season;
+import 'dart:convert' as convert;
 
 const bool inProduction = bool.fromEnvironment('dart.vm.product');
 
@@ -54,8 +55,15 @@ abstract class HttpUtils {
     options.headers?.addAll(headers);
     Response response =
         await _dio.post(api, queryParameters: params, options: options);
-    Map<String, dynamic> json = response.data;
-    return json;
+
+    // ❌❌❌ 注意：itunes.apple.com 返回的数据是 String
+    if (response.data.runtimeType == String) {
+      Map<String, dynamic> json = convert.jsonDecode(response.data);
+      return json;
+    } else {
+      Map<String, dynamic> json = response.data;
+      return json;
+    }
   }
 
   // request

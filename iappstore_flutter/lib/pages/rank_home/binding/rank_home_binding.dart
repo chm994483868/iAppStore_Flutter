@@ -14,5 +14,3 @@ class RankHomeBinding extends Bindings {
     Get.lazyPut(() => RankHomeController());
   }
 }
-
-// "RankHomeController" not found. You need to call "Get.put(RankHomeController())" or "Get.lazyPut(()=>RankHomeController())"

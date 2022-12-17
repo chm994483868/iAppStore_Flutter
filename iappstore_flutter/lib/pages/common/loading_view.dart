@@ -13,11 +13,14 @@ class LoadingView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const CupertinoActivityIndicator(radius: 20),
+            const CupertinoActivityIndicator(radius: 10),
             const SizedBox(
-              height: 10.0,
+              height: 5.0,
             ),
-            Text(_message ?? '正在加载...'),
+            Text(
+              _message ?? '正在加载...',
+              style: const TextStyle(fontSize: 11),
+            ),
           ],
         ),
       ),

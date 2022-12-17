@@ -18,12 +18,6 @@ abstract class BaseRefreshControlleriAppStore<R extends IRepository, T> extends 
     request = Get.find<R>();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-    // refreshController.dispose();
-  }
-
   Future<void> onRefresh() async {}
   Future<void> onLoadMore() async {}
   Future<void> aRequest({

@@ -1,9 +1,9 @@
-/// IRepository 抽象类仅添加一个 retry 重试函数
+/// IRepository 抽象类仅添加一个 retry 重试函数，主要用在 ErrorView 中重试按钮点击进行重试请求
 abstract class IRepository {
   void retry() {}
 }
 
-/// IClassName 抽象类仅添加一个 className 静态属性
+/// IClassName 抽象类仅添加一个 className 静态属性，主要用作在 Get.lazyPut 中添加懒加载依赖项时作为 tag 值使用
 abstract class IClassName {
   static String? className;
 }
@@ -27,7 +27,7 @@ class Box<T extends Object> {
 }
 
 /// [Dart编码：`extension` 这样用更高效](https://www.jianshu.com/p/2779792d3212)
-/// 延展所有 Object 的子类，给它们添加一个 box 的 get 函数，返回一个 Box<T> 对象，即把一个类实例包装在 Box<T> 对象中
+/// 延展 Object 以及所有 Object 的子类，给它们添加一个 box 的 get，调用 box get 时返回一个 Box<T> 对象，即把一个类实例包装在 Box<T> 对象中
 extension ExtensionObject<T extends Object> on T {
   Box<T> get box => Box<T>(this);
 }

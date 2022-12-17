@@ -22,12 +22,6 @@ abstract class BaseRefreshController<R extends IRepository, T> extends GetxContr
     request = Get.find<R>();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-    // refreshController.dispose();
-  }
-
   Future<void> onRefresh() async {}
   Future<void> onLoadMore() async {}
   Future<void> aRequest({

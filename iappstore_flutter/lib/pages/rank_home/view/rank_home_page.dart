@@ -26,7 +26,16 @@ class RankHomePage extends GetView<RankHomeController> {
             controller: controller.refreshController,
             onRefresh: controller.onRefresh,
             onLoading: controller.onLoadMore,
-            child: const Text("PLAY"),
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final model = controller.dataSource[index];
+                    return Text(model.imname?.label ?? "123");
+                  }, childCount: controller.dataSource.length),
+                )
+              ],
+            ),
           );
         },
       ),

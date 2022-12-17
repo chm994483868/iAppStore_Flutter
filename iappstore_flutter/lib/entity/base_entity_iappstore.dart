@@ -7,7 +7,7 @@ class BaseEntityiAppStore<T> extends IEntity<T> {
   // 构造函数
   BaseEntityiAppStore(this.data);
 
-  // Map<String, dynamic> 转化为 BaseEntity
+  // Map<String, dynamic> 数据转化为 BaseEntityiAppStore
   BaseEntityiAppStore.fromJson(Map<String, dynamic> json) {
     // generateOBJ 函数来自父类 IEntity
     data = generateOBJ<T>(json);

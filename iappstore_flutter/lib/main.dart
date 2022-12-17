@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:iappstore_flutter/pages/rank_home/view/rank_home_page.dart';
+import 'package:flutter/services.dart';
+import 'package:iappstore_flutter/my_app.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => run();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const RankHomePage(),
-    );
-  }
+run() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  runApp(MyApp());
 }
