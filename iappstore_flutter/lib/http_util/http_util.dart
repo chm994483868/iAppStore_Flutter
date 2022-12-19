@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:iappstore_flutter/http_util/api.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:iappstore_flutter/http_util/http_status.dart' as season;
@@ -39,8 +40,7 @@ abstract class HttpUtils {
   }) async {
     Options options = getCookieHeaderOptions();
     options.headers?.addAll(headers);
-    Response response =
-        await _dio.get(api, queryParameters: params, options: options);
+    Response response = await _dio.get(api, queryParameters: params, options: options);
     Map<String, dynamic> json = response.data;
     return json;
   }
@@ -51,10 +51,10 @@ abstract class HttpUtils {
     Map<String, dynamic> params = const {},
     Map<String, dynamic> headers = const {},
   }) async {
+    debugPrint("🌍🌍🌍 URL: $api");
     Options options = getCookieHeaderOptions();
     options.headers?.addAll(headers);
-    Response response =
-        await _dio.post(api, queryParameters: params, options: options);
+    Response response = await _dio.post(api, queryParameters: params, options: options);
 
     // ❌❌❌ 注意：itunes.apple.com 返回的数据是 String
     if (response.data.runtimeType == String) {
@@ -75,9 +75,7 @@ abstract class HttpUtils {
     Map<String, dynamic> headers = const {},
   }) async {
     Response response = await _dio.request(api,
-        data: data,
-        queryParameters: queryParameters,
-        options: Options(headers: headers, method: method.string));
+        data: data, queryParameters: queryParameters, options: Options(headers: headers, method: method.string));
     return response.data;
   }
 }
@@ -112,7 +110,5 @@ enum HTTPMethod {
 
 /// 延展 Response 给它添加一个名为 status 的 get，根据响应的 code，从 HttpStatus.mappingTable map 中取一个对应的枚举值
 extension EnumStatus on Response {
-  season.HttpStatus get status =>
-      season.HttpStatus.mappingTable[statusCode] ??
-      season.HttpStatus.connectionError;
+  season.HttpStatus get status => season.HttpStatus.mappingTable[statusCode] ?? season.HttpStatus.connectionError;
 }

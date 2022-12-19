@@ -6,7 +6,7 @@ import 'package:iappstore_flutter/entity/app_rank_m_entity.dart';
 import 'package:iappstore_flutter/enum/response_status.dart';
 import 'package:iappstore_flutter/enum/scroll_view_action_type.dart';
 import 'package:iappstore_flutter/pages/rank_home/repository/rank_home_repository.dart';
-import 'package:stack_trace/stack_trace.dart';
+// import 'package:stack_trace/stack_trace.dart';
 
 class RankHomeController extends BaseRefreshControlleriAppStore<RankHomeRepository, AppRankMEntity>
     implements IClassName {
@@ -26,9 +26,9 @@ class RankHomeController extends BaseRefreshControlleriAppStore<RankHomeReposito
   }
 
   @override
-  Future<void> aRequest(
-      {required ScrollViewActionType type, Map<String, dynamic>? parameters}) async {
-    response = await request.getTopFreeApplications(cid: "", country: "", limit: 20);
+  Future<void> aRequest({required ScrollViewActionType type, Map<String, dynamic>? parameters}) async {
+    response = await request.getTopFreeApplications(cid: "0", country: "cn", limit: 20);
+    // debugPrint(response);
     status = ResponseStatus.successHasContent;
     refreshController.refreshCompleted();
     refreshController.loadComplete();
