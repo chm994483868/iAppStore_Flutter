@@ -63,8 +63,7 @@ class DetailCell extends StatelessWidget {
           Expanded(
             child: Text(
               value ?? "",
-              style:
-                  const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
               maxLines: lines,
               overflow: TextOverflow.ellipsis,
             ),
@@ -140,9 +139,7 @@ class DetailCell extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final url = urls![index];
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: _imageView(url, 350, 11));
+                return Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: _imageView(url, 350, 11));
               },
               childCount: urls?.length,
             ),
@@ -168,8 +165,7 @@ class DetailCell extends StatelessWidget {
         ),
         Text(
           deviceName,
-          style:
-              const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
         ),
       ],
     );
@@ -234,8 +230,7 @@ class DetailCell extends StatelessWidget {
                 children: [
                   Text(
                     model.artistName ?? "",
-                    style: const TextStyle(
-                        color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
+                    style: const TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -285,12 +280,95 @@ class DetailCell extends StatelessWidget {
             model.releaseNotes ?? "",
             style: const TextStyle(fontSize: 12, color: Colors.black87),
           ),
-        )
+        ),
+        const Divider(),
+      ],
+    );
+  }
+
+  Widget _appDetailFooterCellView(String key, String? value) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              key,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
+            ),
+            Expanded(
+              child: Text(
+                value ?? "",
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                textDirection: TextDirection.rtl,
+              ),
+            ),
+          ],
+        ),
+        const Divider(),
       ],
     );
   }
 
   Widget _appDetailFooterView(AppDetailMResults model) {
-    return const Text("000");
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            "信息",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("评分", model.averageUserRating.toString()),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("评论", "${model.userRatingCount}条"),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("占用大小", model.fileSizeBytes),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("最低系统支持", model.minimumOsVersion),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("类别", model.genres?.join(",")),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("供应商", model.sellerName),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("兼容性", model.supportedDevices?.join(",")),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("支持语言", model.languageCodesISO2A?.join(",")),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("年龄分级", model.contentAdvisoryRating),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("更新时间", model.currentVersionReleaseDate),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: _appDetailFooterCellView("上架时间", model.releaseDate),
+        ),
+      ],
+    );
   }
 }
