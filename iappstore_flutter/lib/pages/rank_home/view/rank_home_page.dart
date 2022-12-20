@@ -39,6 +39,7 @@ class RankHomePage extends GetView<RankHomeController> {
                   SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final model = controller.dataSource[index];
+                      // return Text(model.imname?.label.toString() ?? "");
                       return RankCell(
                         model: model,
                         index: index,
@@ -47,7 +48,7 @@ class RankHomePage extends GetView<RankHomeController> {
                         },
                       );
                     }, childCount: controller.dataSource.length),
-                  )
+                  ),
                 ],
               ),
             );

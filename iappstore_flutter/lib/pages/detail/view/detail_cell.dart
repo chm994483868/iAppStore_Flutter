@@ -29,12 +29,11 @@ class DetailCell extends StatelessWidget {
     );
   }
 
-  Widget _imageView(String? imageURL, double height, double width, double borderRadius) {
+  Widget _imageView(String? imageURL, double height, double borderRadius) {
     return Visibility(
       visible: imageURL.toString().isNotEmpty,
       child: SizedBox(
         height: height,
-        width: width,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(borderRadius),
           child: CachedNetworkImage(
@@ -47,21 +46,31 @@ class DetailCell extends StatelessWidget {
     );
   }
 
-  Widget _appDetailTextView(String key, String? value) {
-    return Row(
-      children: [
-        Text(
-          key,
-          style: const TextStyle(color: Colors.black38, fontSize: 14),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          value ?? "",
-          style: const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
-        )
-      ],
+  Widget _appDetailTextView(String key, String? value, int lines) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Row(
+        children: [
+          Text(
+            key,
+            style: const TextStyle(color: Colors.black38, fontSize: 14),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Text(
+              value ?? "",
+              style:
+                  const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
+              maxLines: lines,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -71,9 +80,13 @@ class DetailCell extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
+          flex: 1,
           child: Column(
             children: [
-              _imageView(model.artworkUrl512, 100, 100, 20),
+              const SizedBox(
+                height: 10,
+              ),
+              _imageView(model.artworkUrl512, 100, 20),
               const SizedBox(
                 height: 15,
               ),
@@ -100,23 +113,181 @@ class DetailCell extends StatelessWidget {
           ),
         ),
         Expanded(
-            child: Column(
-          children: [
-            _appDetailTextView("价格", model.formattedPrice),
-            _appDetailTextView("分级", model.contentAdvisoryRating),
-            // _appdeta
-          ],
-        )),
+          flex: 2,
+          child: Column(
+            children: [
+              _appDetailTextView("价格", model.formattedPrice, 1),
+              _appDetailTextView("分级", model.contentAdvisoryRating, 1),
+              _appDetailTextView("分类", (model.genres ?? []).join(','), 1),
+              _appDetailTextView("App ID", (model.trackId ?? 0).toString(), 1),
+              _appDetailTextView("包名", model.bundleId, 1),
+              _appDetailTextView("开发者", model.artistName, 2),
+              _appDetailTextView("上架时间", model.releaseDate, 1),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _appDetailScreenShotView(List<String>? urls, double height) {
+    return SizedBox(
+      height: height,
+      child: CustomScrollView(
+        scrollDirection: Axis.horizontal,
+        slivers: [
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final url = urls![index];
+                return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: _imageView(url, 350, 11));
+              },
+              childCount: urls?.length,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _appDetailScreenShotDeviceView(IconData iconData, String deviceName) {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 8,
+        ),
+        Icon(
+          iconData,
+          color: Colors.black45,
+          size: 15,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          deviceName,
+          style:
+              const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+        ),
       ],
     );
   }
 
   Widget _appDetailScreenShowView(AppDetailMResults model) {
-    return const Text("456");
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+            padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
+            child: Text(
+              "预览",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            )),
+        _appDetailScreenShotView(model.screenshotUrls, 350),
+        const SizedBox(
+          height: 8,
+        ),
+        _appDetailScreenShotDeviceView(Icons.phone_iphone, "iPhone"),
+        const SizedBox(
+          height: 8,
+        ),
+        _appDetailScreenShotView(model.ipadScreenshotUrls, 200),
+        const SizedBox(
+          height: 8,
+        ),
+        _appDetailScreenShotDeviceView(Icons.padding, "iPad"),
+        const SizedBox(
+          height: 8,
+        ),
+        const Divider(),
+      ],
+    );
   }
 
   Widget _appDetailContentSectionView(AppDetailMResults model) {
-    return const Text("789");
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            model.description ?? "",
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model.artistName ?? "",
+                    style: const TextStyle(
+                        color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const Text(
+                    "开发者",
+                    style: TextStyle(color: Colors.black38, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(
+              Icons.navigate_next,
+              color: Colors.black38,
+            ),
+          ],
+        ),
+        const Divider(),
+        const Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text(
+            "新功能",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "版本 ${model.version ?? ""}",
+                style: const TextStyle(fontSize: 12, color: Colors.black54),
+              ),
+              Text(
+                model.currentVersionReleaseDate ?? "",
+                style: const TextStyle(fontSize: 12, color: Colors.black54),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            model.releaseNotes ?? "",
+            style: const TextStyle(fontSize: 12, color: Colors.black87),
+          ),
+        )
+      ],
+    );
   }
 
   Widget _appDetailFooterView(AppDetailMResults model) {

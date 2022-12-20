@@ -23,10 +23,12 @@ class RankCell extends StatelessWidget {
       onTap: () {
         _cellTapCallback(_model);
       },
-      child: Expanded(
-        flex: 1,
-        child: _getRow(),
-      ),
+      child:
+          // Expanded(
+          //   flex: 1,
+          //   child:
+          _getRow(),
+      // ),
     );
   }
 
@@ -124,7 +126,8 @@ class RankCell extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      (_model.imprice?.attributes?.currency ?? "") + (_model.imprice?.attributes?.amount ?? ""),
+                      (_model.imprice?.attributes?.currency ?? "") +
+                          (_model.imprice?.attributes?.amount ?? ""),
                       style: const TextStyle(fontSize: 13, color: Colors.pink),
                     ),
                   ),
