@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iappstore_flutter/entity/app_detail_m_entity.dart';
 import 'package:iappstore_flutter/resource/constant.dart';
 
 class DetailCell extends StatelessWidget {
   final AppDetailMResults? _model;
 
-  const DetailCell({super.key, required AppDetailMResults? model}) : _model = model;
+  DetailCell({super.key, required AppDetailMResults? model}) : _model = model;
+  final isShow = true.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,13 @@ class DetailCell extends StatelessWidget {
   Widget _getRow(AppDetailMResults model) {
     return Column(
       children: [
+        ElevatedButton(onPressed: () {
+          debugPrint("123");
+          final current = isShow.value;
+          isShow.value = !current;
+        }, child: Obx(() {
+          return isShow.value ? Text("123") : Text("456");
+        })),
         _appDetailHeaderView(model),
         _appDetailScreenShowView(model),
         _appDetailContentSectionView(model),
