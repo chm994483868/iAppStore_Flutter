@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iappstore_flutter/entity/app_detail_m_entity.dart';
@@ -9,7 +10,10 @@ class DetailCell extends StatelessWidget {
   final AppDetailMResults? _model;
 
   DetailCell({super.key, required AppDetailMResults? model}) : _model = model;
+
   final isShow = true.obs;
+  final isShowipadScreenshot = false.obs;
+  final isShowFullDescription = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +27,7 @@ class DetailCell extends StatelessWidget {
   Widget _getRow(AppDetailMResults model) {
     return Column(
       children: [
+        // 🌈🌈🌈 使用 Obx 的例子：
         ElevatedButton(onPressed: () {
           debugPrint("123");
           final current = isShow.value;
@@ -72,7 +77,8 @@ class DetailCell extends StatelessWidget {
           Expanded(
             child: Text(
               value ?? "",
-              style: const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
               maxLines: lines,
               overflow: TextOverflow.ellipsis,
             ),
@@ -148,7 +154,9 @@ class DetailCell extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final url = urls![index];
-                return Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: _imageView(url, 350, 11));
+                return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: _imageView(url, 350, 11));
               },
               childCount: urls?.length,
             ),
@@ -159,24 +167,31 @@ class DetailCell extends StatelessWidget {
   }
 
   Widget _appDetailScreenShotDeviceView(IconData iconData, String deviceName) {
-    return Row(
-      children: [
-        const SizedBox(
-          width: 8,
-        ),
-        Icon(
-          iconData,
-          color: Colors.black45,
-          size: 15,
-        ),
-        const SizedBox(
-          width: 5,
-        ),
-        Text(
-          deviceName,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
-        ),
-      ],
+    return GestureDetector(
+      onTap: () {
+        final current = isShowipadScreenshot.value;
+        isShowipadScreenshot.value = !current;
+      },
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 8,
+          ),
+          Icon(
+            iconData,
+            color: Colors.black45,
+            size: 15,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+            deviceName,
+            style:
+                const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+          ),
+        ],
+      ),
     );
   }
 
@@ -199,7 +214,12 @@ class DetailCell extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        _appDetailScreenShotView(model.ipadScreenshotUrls, 200),
+        Obx(
+          () => Visibility(
+            visible: isShowipadScreenshot.value,
+            child: _appDetailScreenShotView(model.ipadScreenshotUrls, 200),
+          ),
+        ),
         const SizedBox(
           height: 8,
         ),
@@ -217,15 +237,44 @@ class DetailCell extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            model.description ?? "",
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.normal,
+        Stack(
+          alignment: AlignmentDirectional.bottomEnd,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Obx(() {
+                return Text(
+                  model.description ?? "",
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  maxLines: isShowFullDescription.value ? null : 3,
+                );
+              }),
             ),
-          ),
+            Visibility(
+              visible: !isShowFullDescription.value,
+              child: TextButton(
+                onPressed: () {
+                  debugPrint("click");
+                  final current = isShowFullDescription.value;
+                  isShowFullDescription.value = !current;
+                },
+                child: Container(
+                  width: 35,
+                  height: 20,
+                  color: Colors.red,
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(0),
+                  child: const Text(
+                    "更多",
+                    style: TextStyle(color: Colors.blue, fontSize: 13),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -239,7 +288,8 @@ class DetailCell extends StatelessWidget {
                 children: [
                   Text(
                     model.artistName ?? "",
-                    style: const TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
+                    style: const TextStyle(
+                        color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -303,12 +353,14 @@ class DetailCell extends StatelessWidget {
           children: [
             Text(
               key,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
+              style: const TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
             ),
             Expanded(
               child: Text(
                 value ?? "",
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                style: const TextStyle(
+                    fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
                 textDirection: TextDirection.rtl,
               ),
             ),
