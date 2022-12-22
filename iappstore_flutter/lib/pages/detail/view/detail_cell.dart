@@ -77,8 +77,7 @@ class DetailCell extends StatelessWidget {
           Expanded(
             child: Text(
               value ?? "",
-              style:
-                  const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
               maxLines: lines,
               overflow: TextOverflow.ellipsis,
             ),
@@ -154,9 +153,7 @@ class DetailCell extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final url = urls![index];
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: _imageView(url, 350, 11));
+                return Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: _imageView(url, 350, 11));
               },
               childCount: urls?.length,
             ),
@@ -187,8 +184,7 @@ class DetailCell extends StatelessWidget {
           ),
           Text(
             deviceName,
-            style:
-                const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
           ),
         ],
       ),
@@ -253,27 +249,29 @@ class DetailCell extends StatelessWidget {
                 );
               }),
             ),
-            Visibility(
-              visible: !isShowFullDescription.value,
-              child: TextButton(
-                onPressed: () {
-                  debugPrint("click");
-                  final current = isShowFullDescription.value;
-                  isShowFullDescription.value = !current;
-                },
-                child: Container(
-                  width: 35,
-                  height: 20,
-                  color: Colors.red,
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.all(0),
-                  child: const Text(
-                    "更多",
-                    style: TextStyle(color: Colors.blue, fontSize: 13),
+            Obx(() {
+              return Visibility(
+                visible: !isShowFullDescription.value,
+                child: TextButton(
+                  onPressed: () {
+                    debugPrint("click");
+                    final current = isShowFullDescription.value;
+                    isShowFullDescription.value = !current;
+                  },
+                  child: Container(
+                    width: 35,
+                    height: 20,
+                    color: Colors.red,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(0),
+                    child: const Text(
+                      "更多",
+                      style: TextStyle(color: Colors.blue, fontSize: 13),
+                    ),
                   ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
         Row(
@@ -288,8 +286,7 @@ class DetailCell extends StatelessWidget {
                 children: [
                   Text(
                     model.artistName ?? "",
-                    style: const TextStyle(
-                        color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
+                    style: const TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -351,19 +348,21 @@ class DetailCell extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Expanded(
+            // child:
             Text(
               key,
-              style: const TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
             ),
-            Expanded(
-              child: Text(
-                value ?? "",
-                style: const TextStyle(
-                    fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
-                textDirection: TextDirection.rtl,
-              ),
+            // ),
+            // Expanded(
+            // child:
+            Text(
+              value ?? "",
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+              textDirection: TextDirection.ltr,
             ),
+            // ),
           ],
         ),
         const Divider(),
@@ -395,7 +394,7 @@ class DetailCell extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("占用大小", model.fileSizeBytes),
+          child: _appDetailFooterCellView("占用大小", model.fileSizeMB),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
