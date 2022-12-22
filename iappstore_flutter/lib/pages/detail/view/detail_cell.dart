@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -12,7 +14,7 @@ class DetailCell extends StatelessWidget {
   DetailCell({super.key, required AppDetailMResults? model}) : _model = model;
 
   final isShow = true.obs;
-  final isShowipadScreenshot = false.obs;
+  final extendiPadShot = false.obs;
   final isShowFullDescription = false.obs;
 
   @override
@@ -27,14 +29,6 @@ class DetailCell extends StatelessWidget {
   Widget _getRow(AppDetailMResults model) {
     return Column(
       children: [
-        // 🌈🌈🌈 使用 Obx 的例子：
-        ElevatedButton(onPressed: () {
-          debugPrint("123");
-          final current = isShow.value;
-          isShow.value = !current;
-        }, child: Obx(() {
-          return isShow.value ? Text("123") : Text("456");
-        })),
         _appDetailHeaderView(model),
         _appDetailScreenShowView(model),
         _appDetailContentSectionView(model),
@@ -77,7 +71,8 @@ class DetailCell extends StatelessWidget {
           Expanded(
             child: Text(
               value ?? "",
-              style: const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
               maxLines: lines,
               overflow: TextOverflow.ellipsis,
             ),
@@ -135,7 +130,8 @@ class DetailCell extends StatelessWidget {
               _appDetailTextView("App ID", (model.trackId ?? 0).toString(), 1),
               _appDetailTextView("包名", model.bundleId, 1),
               _appDetailTextView("开发者", model.artistName, 2),
-              _appDetailTextView("上架时间", model.releaseDate, 1),
+              _appDetailTextView(
+                  "上架时间", model.releaseDate?.replaceFirst("T", " ").replaceFirst("Z", ""), 1),
             ],
           ),
         ),
@@ -153,7 +149,9 @@ class DetailCell extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final url = urls![index];
-                return Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: _imageView(url, 350, 11));
+                return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: _imageView(url, 350, 11));
               },
               childCount: urls?.length,
             ),
@@ -164,18 +162,48 @@ class DetailCell extends StatelessWidget {
   }
 
   Widget _appDetailScreenShotDeviceView(IconData iconData, String deviceName) {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 8,
+        ),
+        Icon(
+          iconData,
+          color: Colors.black45,
+          size: 15,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(
+          deviceName,
+          style:
+              const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+        ),
+      ],
+    );
+  }
+
+  Widget _bothAppDetailScreenShotDeviceView(IconData iconDataIphone, String deviceNameIphone,
+      IconData iconDataiPad, String deviceNameiPad) {
     return GestureDetector(
       onTap: () {
-        final current = isShowipadScreenshot.value;
-        isShowipadScreenshot.value = !current;
+        final current = extendiPadShot.value;
+        extendiPadShot.value = !current;
       },
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(
             width: 8,
           ),
           Icon(
-            iconData,
+            iconDataIphone,
+            color: Colors.black45,
+            size: 15,
+          ),
+          Icon(
+            iconDataiPad,
             color: Colors.black45,
             size: 15,
           ),
@@ -183,8 +211,18 @@ class DetailCell extends StatelessWidget {
             width: 5,
           ),
           Text(
-            deviceName,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+            "$deviceNameIphone 和 $deviceNameiPad",
+            style:
+                const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+          ),
+          const Expanded(child: Text("")),
+          const Icon(
+            Icons.expand_more,
+            color: Colors.black45,
+            size: 25,
+          ),
+          const SizedBox(
+            width: 5,
           ),
         ],
       ),
@@ -197,31 +235,50 @@ class DetailCell extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-            padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
-            child: Text(
-              "预览",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            )),
-        _appDetailScreenShotView(model.screenshotUrls, 350),
-        const SizedBox(
-          height: 8,
+          padding: EdgeInsets.only(left: 8, top: 8, bottom: 8),
+          child: Text(
+            "预览",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ),
-        _appDetailScreenShotDeviceView(Icons.phone_iphone, "iPhone"),
-        const SizedBox(
-          height: 8,
-        ),
-        Obx(
-          () => Visibility(
-            visible: isShowipadScreenshot.value,
-            child: _appDetailScreenShotView(model.ipadScreenshotUrls, 200),
+        Visibility(
+          visible: model.isSupportiPhone,
+          child: Column(
+            children: [
+              _appDetailScreenShotView(model.screenshotUrls, 350),
+              const SizedBox(
+                height: 8,
+              ),
+              Obx(() {
+                if (model.isSupportiPad && extendiPadShot.value == false) {
+                  return _bothAppDetailScreenShotDeviceView(
+                      Icons.phone_iphone, "iPhone", Icons.tablet, "iPad");
+                } else {
+                  return _appDetailScreenShotDeviceView(Icons.phone_iphone, "iPhone");
+                }
+              }),
+            ],
           ),
         ),
         const SizedBox(
           height: 8,
         ),
-        _appDetailScreenShotDeviceView(Icons.padding, "iPad"),
-        const SizedBox(
-          height: 8,
+        Obx(
+          () => Visibility(
+            visible: extendiPadShot.value || (!model.isSupportiPhone && model.isSupportiPad),
+            child: Column(
+              children: [
+                _appDetailScreenShotView(model.ipadScreenshotUrls, 200),
+                const SizedBox(
+                  height: 8,
+                ),
+                _appDetailScreenShotDeviceView(Icons.tablet, "iPad"),
+                const SizedBox(
+                  height: 8,
+                ),
+              ],
+            ),
+          ),
         ),
         const Divider(),
       ],
@@ -254,14 +311,13 @@ class DetailCell extends StatelessWidget {
                 visible: !isShowFullDescription.value,
                 child: TextButton(
                   onPressed: () {
-                    debugPrint("click");
                     final current = isShowFullDescription.value;
                     isShowFullDescription.value = !current;
                   },
                   child: Container(
                     width: 35,
                     height: 20,
-                    color: Colors.red,
+                    color: Colors.white,
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(0),
                     child: const Text(
@@ -274,37 +330,44 @@ class DetailCell extends StatelessWidget {
             }),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    model.artistName ?? "",
-                    style: const TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const Text(
-                    "开发者",
-                    style: TextStyle(color: Colors.black38, fontSize: 13),
-                  ),
-                ],
+        GestureDetector(
+          onTap: () {
+            debugPrint("打开 safari");
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      model.artistName ?? "",
+                      style: const TextStyle(
+                          color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    const Text(
+                      "开发者",
+                      style: TextStyle(color: Colors.black38, fontSize: 13),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Icon(
-              Icons.navigate_next,
-              color: Colors.black38,
-            ),
-          ],
+              const Icon(
+                Icons.navigate_next,
+                color: Colors.black38,
+                size: 25,
+              ),
+            ],
+          ),
         ),
         const Divider(),
         const Padding(
@@ -324,7 +387,9 @@ class DetailCell extends StatelessWidget {
                 style: const TextStyle(fontSize: 12, color: Colors.black54),
               ),
               Text(
-                model.currentVersionReleaseDate ?? "",
+                (model.currentVersionReleaseDate ?? "")
+                    .replaceFirst("T", " ")
+                    .replaceFirst("Z", ""),
                 style: const TextStyle(fontSize: 12, color: Colors.black54),
               ),
             ],
@@ -342,27 +407,41 @@ class DetailCell extends StatelessWidget {
     );
   }
 
-  Widget _appDetailFooterCellView(String key, String? value) {
+  Widget _appDetailFooterCellView(String key, String? value, {String? extendText}) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Expanded(
-            // child:
             Text(
               key,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
+              style: const TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
             ),
-            // ),
-            // Expanded(
-            // child:
-            Text(
-              value ?? "",
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
-              textDirection: TextDirection.ltr,
+            Expanded(
+              child: Container(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  value ?? "",
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
-            // ),
+            Visibility(
+              // ignore: prefer_is_empty
+              visible: extendText != null && extendText.length > 0,
+              child: GestureDetector(
+                onTap: () {},
+                child: const Icon(
+                  Icons.expand_more,
+                  color: Colors.black45,
+                  size: 25,
+                ),
+              ),
+            )
           ],
         ),
         const Divider(),
@@ -386,48 +465,144 @@ class DetailCell extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("评分", model.averageUserRating.toString()),
+          child: FooterCellView(name: "评分", description: model.averageRating),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("评论", "${model.userRatingCount}条"),
+          child: FooterCellView(name: "评论", description: "${model.userRatingCount}条"),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("占用大小", model.fileSizeMB),
+          child: FooterCellView(name: "占用大小", description: model.fileSizeMB),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("最低系统支持", model.minimumOsVersion),
+          child: FooterCellView(name: "最低系统支持", description: model.minimumOsVersion),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("类别", model.genres?.join(",")),
+          child: FooterCellView(name: "类别", description: model.genres?.join(",")),
+        ),
+        // 可扩展显示
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: FooterCellView(
+              name: "供应商", description: model.sellerName, extendText: model.artistName),
+        ),
+        // 可扩展显示
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: FooterCellView(
+              name: "兼容性",
+              description: "${model.supportedDevices?.length ?? 0}种",
+              extendText: model.supportedDevices?.join("\n")),
+        ),
+        // 可扩展显示
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: FooterCellView(
+              name: "支持语言",
+              description: "${model.languageCodesISO2A?.length ?? 0}种",
+              extendText: model.languageCodesISO2A?.join("、")),
+        ),
+        // 可扩展显示
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: FooterCellView(
+              name: "年龄分级",
+              description: model.contentAdvisoryRating,
+              extendText: model.advisories?.join("\n")),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("供应商", model.sellerName),
+          child: FooterCellView(
+              name: "更新时间",
+              description:
+                  model.currentVersionReleaseDate?.replaceFirst("T", " ").replaceFirst("Z", "")),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("兼容性", model.supportedDevices?.join(",")),
+          child: FooterCellView(
+              name: "上架时间",
+              description: model.releaseDate?.replaceFirst("T", " ").replaceFirst("Z", "")),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("支持语言", model.languageCodesISO2A?.join(",")),
+      ],
+    );
+  }
+}
+
+class FooterCellView extends StatelessWidget {
+  final String name;
+  final String? description;
+  final String? extendText;
+
+  final isShowExtendText = false.obs;
+
+  FooterCellView({super.key, required this.name, this.description, this.extendText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              name,
+              style: const TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
+            ),
+            Obx(() {
+              if (isShowExtendText.value == false &&
+                  description != null &&
+                  // ignore: prefer_is_empty
+                  description!.length > 0) {
+                return Expanded(
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      description ?? "",
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              } else {
+                return const SizedBox();
+              }
+            }),
+            Obx(() {
+              // ignore: prefer_is_empty
+              if (isShowExtendText.value == false && extendText != null && extendText!.length > 0) {
+                return GestureDetector(
+                  onTap: () {
+                    final current = isShowExtendText.value;
+                    isShowExtendText.value = !current;
+                  },
+                  child: const Icon(
+                    Icons.expand_more,
+                    color: Colors.black45,
+                    size: 25,
+                  ),
+                );
+              } else {
+                return const SizedBox();
+              }
+            }),
+          ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("年龄分级", model.contentAdvisoryRating),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("更新时间", model.currentVersionReleaseDate),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: _appDetailFooterCellView("上架时间", model.releaseDate),
-        ),
+        Obx(() {
+          // ignore: prefer_is_empty
+          if (isShowExtendText.value == true && extendText != null && extendText!.length > 0) {
+            return Text(extendText ?? "");
+          } else {
+            return const SizedBox();
+          }
+        }),
+        const Divider(),
       ],
     );
   }

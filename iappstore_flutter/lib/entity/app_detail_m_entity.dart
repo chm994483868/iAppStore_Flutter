@@ -96,6 +96,6 @@ class AppDetailMResults {
       }
     }
   }
-}
 
-extension cc on String {}
+  String get averageRating => averageUserRating?.toStringAsFixed(1) ?? "0";
+}
