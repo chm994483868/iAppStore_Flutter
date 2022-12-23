@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iappstore_flutter/pages/main/controller/main_controller.dart';
 import 'package:iappstore_flutter/pages/rank_home/view/rank_home_page.dart';
+import 'package:iappstore_flutter/pages/search/view/search_page.dart';
+import 'package:iappstore_flutter/pages/setting/view/setting_page.dart';
+import 'package:iappstore_flutter/pages/subscription/view/subscription_page.dart';
 
 class MainPage extends GetView<MainController> {
   const MainPage({super.key});
@@ -30,21 +33,15 @@ class MainPage extends GetView<MainController> {
                 );
               case 1:
                 return CupertinoTabView(
-                  builder: (context) => Container(
-                    color: Colors.redAccent,
-                  ),
+                  builder: (context) => const SearchPage(),
                 );
               case 2:
                 return CupertinoTabView(
-                  builder: (context) => Container(
-                    color: Colors.greenAccent,
-                  ),
+                  builder: (context) => const SubscriptionPage(),
                 );
               case 3:
                 return CupertinoTabView(
-                  builder: (context) => Container(
-                    color: Colors.blueAccent,
-                  ),
+                  builder: (context) => const SettingPage(),
                 );
               default:
                 return CupertinoTabView(

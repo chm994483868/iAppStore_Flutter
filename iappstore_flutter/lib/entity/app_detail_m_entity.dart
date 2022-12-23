@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:iappstore_flutter/generated/json/base/json_field.dart';
 import 'package:iappstore_flutter/generated/json/app_detail_m_entity.g.dart';
 import 'dart:convert';

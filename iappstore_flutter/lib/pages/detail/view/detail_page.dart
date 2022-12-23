@@ -14,9 +14,9 @@ class DetailPage extends GetView<DetailController> {
     AppRankMFeedEntry entry = Get.arguments;
 
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(
+      navigationBar: const CupertinoNavigationBar(
         // middle: Text(entry.imname?.label.toString() ?? ""),
-        trailing: const Icon(Icons.travel_explore),
+        trailing: Icon(Icons.travel_explore),
       ),
       child: StatusView(
         controller: controller,
