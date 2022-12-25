@@ -5,6 +5,6 @@ import 'package:iappstore_flutter/http_util/request.dart' as http;
 
 class SearchRepository extends IRepository {
   Future<BaseEntityiAppStore<AppDetailMEntity>> searchAppData(
-          {String? appId, String? keyWord, required String regionName}) =>
-      http.Request.postiAppStore(api: "search?term=123&country=cn&limit=200&entity=software");
+          {required String keyWord, required String regionId}) =>
+      http.Request.postiAppStore(api: "search?term=$keyWord&country=$regionId&limit=200&entity=software");
 }

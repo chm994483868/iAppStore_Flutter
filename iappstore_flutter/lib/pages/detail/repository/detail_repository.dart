@@ -4,7 +4,6 @@ import 'package:iappstore_flutter/entity/base_entity_iappstore.dart';
 import 'package:iappstore_flutter/http_util/request.dart' as http;
 
 class DetailRepository extends IRepository {
-  Future<BaseEntityiAppStore<AppDetailMEntity>> getAppDetail(
-          {required String cid, required String country, required int limit}) =>
-      http.Request.postiAppStore(api: "cn/lookup?id=1484048379");
+  Future<BaseEntityiAppStore<AppDetailMEntity>> appDetailData({required String appID, required String regionID}) =>
+      http.Request.postiAppStore(api: "$regionID/lookup?id=$appID");
 }

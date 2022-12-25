@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iappstore_flutter/pages/common/refresh_header_footer.dart';
 import 'package:iappstore_flutter/pages/common/refresh_status_view.dart';
-import 'package:iappstore_flutter/pages/detail/view/rank_sort_view.dart';
+import 'package:iappstore_flutter/pages/rank_home/view/rank_sort_view.dart';
 import 'package:iappstore_flutter/pages/rank_home/controller/rank_home_controller.dart';
 import 'package:iappstore_flutter/pages/rank_home/view/rank_cell.dart';
 import 'package:iappstore_flutter/resource/constant.dart';
@@ -18,32 +18,42 @@ class RankHomePage extends GetView<RankHomeController> {
   Widget build(BuildContext context) {
     debugPrint('🐑🐑🐑 ${Trace.current().frames[0].member}');
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        border: Border(
-            top: BorderSide.none,
-            left: BorderSide.none,
-            right: BorderSide.none,
-            bottom: BorderSide.none),
-        middle: Text(
-          "免费 App 排行",
-          style: TextStyle(fontSize: 18, color: Colors.black),
-        ),
+      navigationBar: CupertinoNavigationBar(
+        border: const Border(),
+        middle: Obx(() {
+          return Text(
+            controller.rankTitle.value,
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+          );
+        }),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+        padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 0),
         child: Column(
           children: [
-            Text(DateTime.now().toString()),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: RankSortView(
-                rankName: Constant.rankingTypeLists.first,
-                categoryName: Constant.categoryTypeLists.first,
-                regionName: Constant.regionTypeLists.first,
-              ),
+            Obx(() {
+              return Text(controller.updateTimeString.value);
+            }),
+            const SizedBox(
+              height: 10,
+            ),
+            RankSortView(
+              rankName: controller.rankName,
+              categoryName: controller.categoryName,
+              regionName: controller.regionName,
+              callback: (list) {
+                debugPrint("💥💥💥 筛选栏选中的回调：${list[0]}, ${list[1]}, ${list[2]}");
+
+                controller.rankName = list[0];
+                controller.categoryName = list[1];
+                controller.regionName = list[2];
+
+                // 请求指定分类的数据
+                controller.fetchRankData(true);
+              },
             ),
             const SizedBox(
-              height: 20,
+              height: 5,
             ),
             Expanded(
               child: RefreshStatusView(
@@ -61,12 +71,18 @@ class RankHomePage extends GetView<RankHomeController> {
                         SliverList(
                           delegate: SliverChildBuilderDelegate((context, index) {
                             final model = controller.dataSource[index];
-                            // return Text(model.imname?.label.toString() ?? "");
                             return RankCell(
                               model: model,
                               index: index,
                               callback: (model) async {
-                                Get.toNamed(Routes.detailPage, arguments: model);
+                                final appID = model.id?.attributes?.imid;
+                                if (appID != null && appID.isNotEmpty) {
+                                  Get.toNamed(Routes.detailPage, arguments: {
+                                    Constant.appID: appID,
+                                    Constant.regionName: controller.regionName,
+                                    Constant.model: model,
+                                  });
+                                }
                               },
                             );
                           }, childCount: controller.dataSource.length),

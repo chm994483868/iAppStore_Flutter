@@ -121,6 +121,12 @@ class AppRankMFeedEntry {
   String toString() {
     return jsonEncode(this);
   }
+
+  String get largeTitle {
+    return imname?.label.toString() ?? "";
+  }
+
+  
 }
 
 @JsonSerializable()

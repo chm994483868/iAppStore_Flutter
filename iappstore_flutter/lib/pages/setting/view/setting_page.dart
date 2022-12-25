@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iappstore_flutter/pages/common/status_view.dart';
 import 'package:iappstore_flutter/pages/setting/controller/setting_controller.dart';
 
 class SettingPage extends GetView<SettingController> {
@@ -9,26 +9,27 @@ class SettingPage extends GetView<SettingController> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 140,
-            child: CustomScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text("设置"),
-                  trailing: Icon(Icons.tune),
-                ),
-              ],
-            ),
+      child: CustomScrollView(
+        slivers: [
+          const CupertinoSliverNavigationBar(
+            largeTitle: Text("设置"),
+            border: Border(),
           ),
-          Expanded(
-            flex: 1,
-            child: Column(
-              children: const [
-                Text("123"),
-              ],
+          SliverFillRemaining(
+            // child: Text("123"),
+            child: StatusView(
+              controller: controller,
+              contentBuilder: (_) {
+                return CustomScrollView(
+                  slivers: [
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return const Text("waiting");
+                      }, childCount: 1),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ],

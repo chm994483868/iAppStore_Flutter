@@ -1,51 +1,81 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 class SearchTextFieldWidget extends StatelessWidget {
-  final ValueChanged<String>? onSubmitted;
-  final VoidCallback? onTap;
-  final String? hintText;
-  final EdgeInsetsGeometry? margin;
-  final bool enabled;
+  final ValueChanged<String>? _onSubmitted;
+  final VoidCallback? _onCancel;
+  final String? _placeholder;
+  final searchText = "".obs;
 
-  const SearchTextFieldWidget(
-      {super.key, this.hintText, this.onSubmitted, this.onTap, this.margin, required this.enabled});
+  SearchTextFieldWidget({super.key, ValueChanged<String>? onSubmitted, VoidCallback? onCancel, String? placeholder})
+      : _onSubmitted = onSubmitted,
+        _onCancel = onCancel,
+        _placeholder = placeholder;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: enabled == false ? onTap : null,
-      child: Container(
-        margin: margin ?? const EdgeInsets.all(0.0),
-        width: MediaQuery.of(context).size.width,
-        alignment: AlignmentDirectional.center,
-        height: 40.0,
-        decoration: BoxDecoration(
-          color: Colors.white70,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        child: CupertinoTextField(
-          enabled: enabled,
-          onSubmitted: onSubmitted,
-          onTap: onTap,
-          cursorColor: Colors.blue,
-          // decoration: BoxDecoration()
+    debugPrint('🐑🐑🐑 ${Trace.current().frames[0].member}');
+    final textController = TextEditingController();
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.black12,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: CupertinoTextField(
+              controller: textController,
+              placeholder: _placeholder ?? "游戏、App 等",
+              cursorColor: Colors.blue,
+              prefix: const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Icon(
+                  Icons.search,
+                  color: Colors.black26,
+                ),
+              ),
+              clearButtonMode: OverlayVisibilityMode.editing,
+              textInputAction: TextInputAction.search,
+              decoration: const BoxDecoration(),
+              onChanged: (value) {
+                debugPrint("🐶🐶🐶 onChanged：$value");
+                searchText.value = value;
 
-          // InputDecoration(
-          //   contentPadding: const EdgeInsets.only(top: 5.0),
-          //   border: InputBorder.none,
-          //   hintText: hintText,
-          //   hintStyle: const TextStyle(fontSize: 16, color: Colors.redAccent),
-          //   prefixIcon: const Icon(
-          //     Icons.search,
-          //     size: 25,
-          //     color: Colors.greenAccent,
-          //   ),
-          // ),
-
-          // style: const TextStyle(fontSize: 16),
+                // 取消回调
+                if (value.isEmpty && _onCancel != null) {
+                  _onCancel!();
+                }
+              },
+              onSubmitted: _onSubmitted,
+            ),
+          ),
         ),
-      ),
+        Obx(() {
+          if (searchText.value.isNotEmpty) {
+            return TextButton(
+              onPressed: () {
+                textController.clear();
+                searchText.value = "";
+
+                // 取消回调
+                if (_onCancel != null) {
+                  _onCancel!();
+                }
+              },
+              child: const Text(
+                "取消",
+                style: TextStyle(fontSize: 17),
+              ),
+            );
+          } else {
+            return const SizedBox();
+          }
+        }),
+      ],
     );
   }
 }

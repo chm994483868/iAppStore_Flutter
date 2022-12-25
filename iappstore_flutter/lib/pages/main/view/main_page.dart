@@ -17,10 +17,22 @@ class MainPage extends GetView<MainController> {
         return CupertinoTabScaffold(
           tabBar: CupertinoTabBar(
             items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.track_changes), label: "榜单"),
-              BottomNavigationBarItem(icon: Icon(Icons.manage_search_outlined), label: "搜索"),
-              BottomNavigationBarItem(icon: Icon(Icons.podcasts_outlined), label: "订阅"),
-              BottomNavigationBarItem(icon: Icon(Icons.sensor_occupied_outlined), label: "设置"),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.track_changes),
+                label: "榜单",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.manage_search_outlined),
+                label: "搜索",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.podcasts_outlined),
+                label: "订阅",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.sensor_occupied_outlined),
+                label: "设置",
+              ),
             ],
             currentIndex: controller.selectedIndex,
             onTap: controller.onItemTapped,

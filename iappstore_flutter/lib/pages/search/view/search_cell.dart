@@ -1,18 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:iappstore_flutter/entity/app_rank_m_entity.dart';
-import 'package:iappstore_flutter/resource/constant.dart';
+import 'package:iappstore_flutter/entity/app_detail_m_entity.dart';
 
-class RankCell extends StatelessWidget {
-  final AppRankMFeedEntry _model;
+class SearchCell extends StatelessWidget {
+  final AppDetailMResults _model;
   final int _index;
-  final ValueChanged<AppRankMFeedEntry> _cellTapCallback;
+  final ValueChanged<AppDetailMResults> _cellTapCallback;
 
-  const RankCell(
+  const SearchCell(
       {super.key,
-      required AppRankMFeedEntry model,
+      required AppDetailMResults model,
       required int index,
-      required ValueChanged<AppRankMFeedEntry> callback})
+      required ValueChanged<AppDetailMResults> callback})
       : _model = model,
         _index = index,
         _cellTapCallback = callback;
@@ -46,7 +45,7 @@ class RankCell extends StatelessWidget {
 
   Widget _imageView() {
     return Visibility(
-      visible: _model.imimage.toString().isNotEmpty,
+      visible: _model.artworkUrl100.toString().isNotEmpty,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 17),
         child: SizedBox(
@@ -56,7 +55,7 @@ class RankCell extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             child: CachedNetworkImage(
               fit: BoxFit.fitHeight,
-              imageUrl: _model.imimage?.last.label.toString() ?? Constant.appImagePlaceholder,
+              imageUrl: _model.artworkUrl100.toString(),
               placeholder: (context, url) => Image.asset("assets/images/placeholder.png"),
             ),
           ),
@@ -84,7 +83,7 @@ class RankCell extends StatelessWidget {
           children: [
             // App 名字
             Text(
-              _model.imname?.label.toString() ?? "",
+              _model.trackName.toString(),
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -98,7 +97,7 @@ class RankCell extends StatelessWidget {
             ),
             // App 描述
             Text(
-              (_model.summary?.label.toString() ?? "").replaceAll("\n", ""),
+              _model.description.toString().replaceAll("\n", ""),
               style: const TextStyle(
                 fontSize: 14,
                 color: Colors.black45,
@@ -113,15 +112,15 @@ class RankCell extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  _model.category?.attributes?.label ?? "",
+                  (_model.genres ?? []).join(","),
                   style: const TextStyle(fontSize: 14, color: Colors.black),
                 ),
                 Visibility(
-                  visible: (_model.imprice?.attributes?.amount ?? "0.00") != "0.00",
+                  visible: (_model.price ?? 0) != 0,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      (_model.imprice?.attributes?.currency ?? "") + (_model.imprice?.attributes?.amount ?? ""),
+                      (_model.formattedPrice ?? ""),
                       style: const TextStyle(fontSize: 13, color: Colors.pink),
                     ),
                   ),
@@ -130,7 +129,7 @@ class RankCell extends StatelessWidget {
             ),
             // App 开发者
             Text(
-              _model.imartist?.label ?? "",
+              _model.artistName ?? "",
               style: const TextStyle(fontSize: 13, color: Colors.black45),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

@@ -66,8 +66,7 @@ class DetailCell extends StatelessWidget {
           Expanded(
             child: Text(
               value ?? "",
-              style:
-                  const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.black87, fontSize: 15, fontWeight: FontWeight.bold),
               maxLines: lines,
               overflow: TextOverflow.ellipsis,
             ),
@@ -125,8 +124,7 @@ class DetailCell extends StatelessWidget {
               _appDetailTextView("App ID", (model.trackId ?? 0).toString(), 1),
               _appDetailTextView("包名", model.bundleId, 1),
               _appDetailTextView("开发者", model.artistName, 2),
-              _appDetailTextView(
-                  "上架时间", model.releaseDate?.replaceFirst("T", " ").replaceFirst("Z", ""), 1),
+              _appDetailTextView("上架时间", model.releaseDate?.replaceFirst("T", " ").replaceFirst("Z", ""), 1),
             ],
           ),
         ),
@@ -144,9 +142,7 @@ class DetailCell extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 final url = urls![index];
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: _imageView(url, 350, 11));
+                return Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: _imageView(url, 350, 11));
               },
               childCount: urls?.length,
             ),
@@ -172,15 +168,14 @@ class DetailCell extends StatelessWidget {
         ),
         Text(
           deviceName,
-          style:
-              const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
         ),
       ],
     );
   }
 
-  Widget _bothAppDetailScreenShotDeviceView(IconData iconDataIphone, String deviceNameIphone,
-      IconData iconDataiPad, String deviceNameiPad) {
+  Widget _bothAppDetailScreenShotDeviceView(
+      IconData iconDataIphone, String deviceNameIphone, IconData iconDataiPad, String deviceNameiPad) {
     return GestureDetector(
       onTap: () {
         final current = extendiPadShot.value;
@@ -207,8 +202,7 @@ class DetailCell extends StatelessWidget {
           ),
           Text(
             "$deviceNameIphone 和 $deviceNameiPad",
-            style:
-                const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black45),
           ),
           const Expanded(child: Text("")),
           const Icon(
@@ -245,9 +239,8 @@ class DetailCell extends StatelessWidget {
                 height: 8,
               ),
               Obx(() {
-                if (model.isSupportiPad && extendiPadShot.value == false) {
-                  return _bothAppDetailScreenShotDeviceView(
-                      Icons.phone_iphone, "iPhone", Icons.tablet, "iPad");
+                if (extendiPadShot.value == false && model.isSupportiPad) {
+                  return _bothAppDetailScreenShotDeviceView(Icons.phone_iphone, "iPhone", Icons.tablet, "iPad");
                 } else {
                   return _appDetailScreenShotDeviceView(Icons.phone_iphone, "iPhone");
                 }
@@ -333,27 +326,28 @@ class DetailCell extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      model.artistName ?? "",
-                      style: const TextStyle(
-                          color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    const Text(
-                      "开发者",
-                      style: TextStyle(color: Colors.black38, fontSize: 13),
-                    ),
-                  ],
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 20, bottom: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        model.artistName ?? "",
+                        style: const TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.normal),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      const Text(
+                        "开发者",
+                        style: TextStyle(color: Colors.black38, fontSize: 13),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               const Icon(
@@ -382,9 +376,7 @@ class DetailCell extends StatelessWidget {
                 style: const TextStyle(fontSize: 12, color: Colors.black54),
               ),
               Text(
-                (model.currentVersionReleaseDate ?? "")
-                    .replaceFirst("T", " ")
-                    .replaceFirst("Z", ""),
+                (model.currentVersionReleaseDate ?? "").replaceFirst("T", " ").replaceFirst("Z", ""),
                 style: const TextStyle(fontSize: 12, color: Colors.black54),
               ),
             ],
@@ -410,16 +402,14 @@ class DetailCell extends StatelessWidget {
           children: [
             Text(
               key,
-              style: const TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
             ),
             Expanded(
               child: Container(
                 alignment: Alignment.centerRight,
                 child: Text(
                   value ?? "",
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -481,8 +471,7 @@ class DetailCell extends StatelessWidget {
         // 可扩展显示
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-          child: FooterCellView(
-              name: "供应商", description: model.sellerName, extendText: model.artistName),
+          child: FooterCellView(name: "供应商", description: model.sellerName, extendText: model.artistName),
         ),
         // 可扩展显示
         Padding(
@@ -504,22 +493,17 @@ class DetailCell extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
           child: FooterCellView(
-              name: "年龄分级",
-              description: model.contentAdvisoryRating,
-              extendText: model.advisories?.join("\n")),
+              name: "年龄分级", description: model.contentAdvisoryRating, extendText: model.advisories?.join("\n")),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
           child: FooterCellView(
-              name: "更新时间",
-              description:
-                  model.currentVersionReleaseDate?.replaceFirst("T", " ").replaceFirst("Z", "")),
+              name: "更新时间", description: model.currentVersionReleaseDate?.replaceFirst("T", " ").replaceFirst("Z", "")),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
           child: FooterCellView(
-              name: "上架时间",
-              description: model.releaseDate?.replaceFirst("T", " ").replaceFirst("Z", "")),
+              name: "上架时间", description: model.releaseDate?.replaceFirst("T", " ").replaceFirst("Z", "")),
         ),
       ],
     );
@@ -545,8 +529,7 @@ class FooterCellView extends StatelessWidget {
           children: [
             Text(
               name,
-              style: const TextStyle(
-                  fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black54),
             ),
             Obx(() {
               if (isShowExtendText.value == false &&
@@ -558,8 +541,7 @@ class FooterCellView extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       description ?? "",
-                      style: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -3,52 +3,59 @@ import 'package:get/get.dart';
 import 'package:iappstore_flutter/enum/rank_sort_type.dart';
 import 'package:iappstore_flutter/resource/constant.dart';
 
+// ignore: must_be_immutable
 class RankSortView extends StatelessWidget {
   String rankName;
   String categoryName;
   String regionName;
+  final ValueChanged<List<String>>? _callback;
 
   RankSortView(
-      {super.key, required this.rankName, required this.categoryName, required this.regionName});
+      {super.key,
+      required this.rankName,
+      required this.categoryName,
+      required this.regionName,
+      ValueChanged<List<String>>? callback})
+      : _callback = callback;
 
   final sortViewIsExpanded = false.obs;
   final currentSortType = RankSortType.none.obs;
 
-  final tempRankName = "123".obs;
-  final tempCategoryName = "456".obs;
-  final tempRegionName = "789".obs;
+  final rankNameObs = "".obs;
+  final categoryObs = "".obs;
+  final regionNameObs = "".obs;
 
   @override
   Widget build(BuildContext context) {
-    tempRankName.value = rankName;
-    tempCategoryName.value = categoryName;
-    tempRegionName.value = regionName;
+    rankNameObs.value = rankName;
+    categoryObs.value = categoryName;
+    regionNameObs.value = regionName;
 
     return Column(
       children: [
         Row(
           children: [
             Expanded(
-              flex: 1,
+              // flex: 1,
               child: Obx(
                 () {
-                  return _createSortLabel(tempRankName.value, RankSortType.rank);
+                  return _createSortLabel(rankNameObs.value, RankSortType.rank);
                 },
               ),
             ),
             Expanded(
-              flex: 1,
+              // flex: 1,
               child: Obx(
                 () {
-                  return _createSortLabel(tempCategoryName.value, RankSortType.category);
+                  return _createSortLabel(categoryObs.value, RankSortType.category);
                 },
               ),
             ),
             Expanded(
-              flex: 1,
+              // flex: 1,
               child: Obx(
                 () {
-                  return _createSortLabel(tempRegionName.value, RankSortType.region);
+                  return _createSortLabel(regionNameObs.value, RankSortType.region);
                 },
               ),
             ),
@@ -82,38 +89,50 @@ class RankSortView extends StatelessWidget {
                       delegate: SliverChildBuilderDelegate((context, index) {
                     final title = titleList[index];
                     if (index == selectIndex) {
-                      return _unselectedItem(title);
+                      return _selectedItem(title);
                     } else {
                       return InkWell(
                         onTap: () {
-                          // 回调选中了某项
-                          debugPrint("🌶️🌶️🌶️：Click: ${titleList[index]}");
+                          debugPrint("🌶️🌶️🌶️ Click: ${titleList[index]}");
+
                           final selectTitle = titleList[index];
                           switch (currentSortType.value) {
                             case RankSortType.rank:
                               rankName = selectTitle;
-                              tempRankName.value = selectTitle;
+                              rankNameObs.value = selectTitle;
                               break;
                             case RankSortType.category:
                               categoryName = selectTitle;
-                              tempCategoryName.value = selectTitle;
+                              categoryObs.value = selectTitle;
                               break;
                             case RankSortType.region:
                               regionName = selectTitle;
-                              tempRegionName.value = selectTitle;
+                              regionNameObs.value = selectTitle;
                               break;
                             case RankSortType.none:
                               break;
                           }
+                          sortViewIsExpanded.value = false;
                           currentSortType.value = RankSortType.none;
+
+                          // 回调
+                          if (_callback != null) {
+                            _callback!([rankNameObs.value, categoryObs.value, regionNameObs.value]);
+                          }
                         },
                         child: SizedBox(
-                          height: 30,
-                          child: Text(
-                            title,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          height: 40,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                style: const TextStyle(fontWeight: FontWeight.normal),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const Divider(),
+                            ],
                           ),
                         ),
                       );
@@ -123,7 +142,9 @@ class RankSortView extends StatelessWidget {
               ),
             );
           } else {
-            return const SizedBox();
+            return const SizedBox(
+              height: 0,
+            );
           }
         }),
       ],
@@ -142,11 +163,15 @@ class RankSortView extends StatelessWidget {
         }
       },
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(color: Colors.black, fontSize: 16),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+              ),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -172,22 +197,29 @@ class RankSortView extends StatelessWidget {
     );
   }
 
-  Widget _unselectedItem(String title) {
+  Widget _selectedItem(String title) {
     return SizedBox(
-      height: 30,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      height: 40,
+      child: Column(
         children: [
-          Text(
-            title,
-            style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const Icon(
+                Icons.done,
+                color: Colors.blue,
+              )
+            ],
           ),
-          const Icon(
-            Icons.done,
+          const Divider(
             color: Colors.blue,
-          )
+          ),
         ],
       ),
     );

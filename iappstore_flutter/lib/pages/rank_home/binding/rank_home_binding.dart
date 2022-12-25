@@ -7,10 +7,9 @@ class RankHomeBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => RankHomeRepository());
-    Get.lazyPut(
-        tag: RankHomeController.className,
-        () => RefreshController(initialRefresh: true));
-    Get.lazyPut<int>(tag: RankHomeController.className, () => 1);
     Get.lazyPut(() => RankHomeController());
+
+    Get.lazyPut(tag: RankHomeController.className, () => RefreshController(initialRefresh: true));
+    Get.lazyPut<int>(tag: RankHomeController.className, () => 1);
   }
 }
