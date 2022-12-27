@@ -10,6 +10,5 @@ class RankHomeBinding extends Bindings {
     Get.lazyPut(() => RankHomeController());
 
     Get.lazyPut(tag: RankHomeController.className, () => RefreshController(initialRefresh: true));
-    Get.lazyPut<int>(tag: RankHomeController.className, () => 1);
   }
 }

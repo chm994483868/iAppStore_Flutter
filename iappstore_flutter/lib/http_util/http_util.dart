@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:iappstore_flutter/http_util/api.dart';
+import 'package:iappstore_flutter/resource/constant.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:iappstore_flutter/http_util/http_status.dart' as season;
 import 'dart:convert' as convert;
@@ -40,9 +41,39 @@ abstract class HttpUtils {
   }) async {
     Options options = getCookieHeaderOptions();
     options.headers?.addAll(headers);
-    Response response = await _dio.get(api, queryParameters: params, options: options);
-    Map<String, dynamic> json = response.data;
-    return json;
+
+    try {
+      Response response = await _dio.get(api, queryParameters: params, options: options);
+      if (response.data != null) {
+        // ❌❌❌ 注意：itunes.apple.com 返回的数据是 String
+        Map<String, dynamic> json;
+        if (response.data.runtimeType == String) {
+          json = convert.jsonDecode(response.data);
+        } else {
+          json = response.data;
+        }
+        return {
+          Constant.errorCode: 0,
+          Constant.errorMsg: "",
+          Constant.data: json,
+        };
+      } else {
+        // response.data 数据为 null，说明请求成功了，但是没有返回数据，那么这是什么情况呢？
+        return {
+          Constant.errorCode: 0,
+          Constant.errorMsg: "",
+          Constant.data: Null,
+        };
+      }
+    } on DioError catch (e) {
+      debugPrint("❌❌❌ post 请求发生错误: $e");
+
+      return {
+        Constant.errorCode: -1,
+        Constant.errorMsg: e.toString(),
+        Constant.data: Null,
+      };
+    }
   }
 
   // post 请求
@@ -54,15 +85,37 @@ abstract class HttpUtils {
     debugPrint("🌍🌍🌍 URL: $api");
     Options options = getCookieHeaderOptions();
     options.headers?.addAll(headers);
-    Response response = await _dio.post(api, queryParameters: params, options: options);
+    try {
+      Response response = await _dio.post(api, queryParameters: params, options: options);
+      if (response.data != null) {
+        // ❌❌❌ 注意：itunes.apple.com 返回的数据是 String
+        Map<String, dynamic> json;
+        if (response.data.runtimeType == String) {
+          json = convert.jsonDecode(response.data);
+        } else {
+          json = response.data;
+        }
+        return {
+          Constant.errorCode: 0,
+          Constant.errorMsg: "",
+          Constant.data: json,
+        };
+      } else {
+        // response.data 数据为 null，说明请求成功了，但是没有返回数据，那么这是什么情况呢？
+        return {
+          Constant.errorCode: 0,
+          Constant.errorMsg: "",
+          Constant.data: Null,
+        };
+      }
+    } on DioError catch (e) {
+      debugPrint("❌❌❌ post 请求发生错误: $e");
 
-    // ❌❌❌ 注意：itunes.apple.com 返回的数据是 String
-    if (response.data.runtimeType == String) {
-      Map<String, dynamic> json = convert.jsonDecode(response.data);
-      return json;
-    } else {
-      Map<String, dynamic> json = response.data;
-      return json;
+      return {
+        Constant.errorCode: -1,
+        Constant.errorMsg: e.toString(),
+        Constant.data: Null,
+      };
     }
   }
 
@@ -75,7 +128,9 @@ abstract class HttpUtils {
     Map<String, dynamic> headers = const {},
   }) async {
     Response response = await _dio.request(api,
-        data: data, queryParameters: queryParameters, options: Options(headers: headers, method: method.string));
+        data: data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers, method: method.string));
     return response.data;
   }
 }
@@ -110,5 +165,6 @@ enum HTTPMethod {
 
 /// 延展 Response 给它添加一个名为 status 的 get，根据响应的 code，从 HttpStatus.mappingTable map 中取一个对应的枚举值
 extension EnumStatus on Response {
-  season.HttpStatus get status => season.HttpStatus.mappingTable[statusCode] ?? season.HttpStatus.connectionError;
+  season.HttpStatus get status =>
+      season.HttpStatus.mappingTable[statusCode] ?? season.HttpStatus.connectionError;
 }

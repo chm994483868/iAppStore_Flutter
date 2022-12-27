@@ -24,7 +24,7 @@ class RefreshStatusView<T extends BaseRefreshControlleriAppStore> extends Statel
           children: [
             const LoadingView(),
             ErrorView(
-              retryAction: controller.request.retry,
+              retryAction: controller.onRetry,
             ),
             contentBuilder(controller),
             const EmptyView(),

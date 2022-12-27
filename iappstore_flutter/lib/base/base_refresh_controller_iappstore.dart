@@ -18,6 +18,8 @@ abstract class BaseRefreshControlleriAppStore<R extends IRepository, T> extends 
     request = Get.find<R>();
   }
 
+  // Future<void> onRetry() async {}
+  void onRetry() {}
   Future<void> onRefresh() async {}
   Future<void> onLoadMore() async {}
   Future<void> aRequest({

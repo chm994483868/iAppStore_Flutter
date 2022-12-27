@@ -1,12 +1,13 @@
 import 'package:iappstore_flutter/base/interface.dart';
 import 'package:iappstore_flutter/generated/json/base/json_convert_content.dart';
 
-/// 定义抽象泛型类 IEntity 作为所有 Entity 的基类，为它们提供一个 generateOBJ 函数
+/// 定义抽象泛型类 IEntity 作为 BaseEntity/BaseEntityiAppStore 的基类，为它们提供一个 generateOBJ 函数，完成 Json 数据到 T 的模型转换。
 abstract class IEntity<T> {
   T? generateOBJ<O>(Object? json) {
-    // if (T.toString() == 'String') {
-    //   return json.toString() as T;
-    // }
+    if (json == null) {
+      return null;
+    }
+
     if (typeName(T) == 'String') {
       return json.toString() as T;
     } else if (typeName(T) == 'Map<dynamic, dynamic>') {
