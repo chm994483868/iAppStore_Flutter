@@ -71,6 +71,11 @@ class RankHomeController extends BaseRefreshControlleriAppStore<RankHomeReposito
     // 请求响应以后根据响应的状态更新 status 的值，此值决定了 rank_home 页面的显示内容：loading 页面、空页面、App 列表页面、请求失败的重试页面
     status = response?.responseStatus ?? ResponseStatus.successHasContent;
 
+    // 如果响应成功后返回的 App 列表为空表示，数据为空
+    if ((response?.data?.feed?.entry?.length ?? 0) <= 0) {
+      status = ResponseStatus.successNoData;
+    }
+
     // 根据响应的数据更新导航栏的标题
     rankTitle.value = (response?.data?.feed?.title?.label ?? "").split("：").last;
     // 更新更新的时间
@@ -82,6 +87,7 @@ class RankHomeController extends BaseRefreshControlleriAppStore<RankHomeReposito
     update();
   }
 
+  // 重写 onRetry 函数，当网络请求失败时，点击重试按钮，重新请求数据
   @override
   void onRetry() {
     super.onRetry();

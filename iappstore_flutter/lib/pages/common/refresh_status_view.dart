@@ -22,11 +22,15 @@ class RefreshStatusView<T extends BaseRefreshControlleriAppStore> extends Statel
         return IndexedStack(
           index: value,
           children: [
+            // 加载 loading View
             const LoadingView(),
+            // 网络请求错误后，显示一个重试按钮的 View
             ErrorView(
               retryAction: controller.onRetry,
             ),
+            // 这里 contentBuilder 也可最小化在 controller 中调用 update 函数造成的 Widget 重建的性能消耗最小
             contentBuilder(controller),
+            // 网络请求成功但是页面数据为空的 View
             const EmptyView(),
           ],
         );
